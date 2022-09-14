@@ -47,6 +47,7 @@ async function getWeather(location) {
     const weather = {
       status: data.weather[0].main,
       location: data.name,
+      countryAbbrev: data.sys.country,
       temp: `${data.main.temp}`,
       feels: `${data.main.feels_like}`,
       humidity: `${data.main.humidity}%`,
@@ -102,7 +103,7 @@ function processWeather(weather) {
   const weatherWind = document.getElementById("wind");
   weatherIcon.src = icon;
   weatherStatus.textContent = status;
-  weatherLocation.textContent = location;
+  weatherLocation.textContent = location + ", " + weather.countryAbbrev;
   weatherTemp.textContent = temp;
   weatherFeels.textContent = feels;
   weatherHumidity.textContent = humidity;
