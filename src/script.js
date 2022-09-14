@@ -93,7 +93,7 @@ function convertUnits() {
 }
 
 function processWeather(weather) {
-  const { status, location, temp, feels, humidity, wind, icon } = weather;
+  const { status, location, countryAbbrev, temp, feels, humidity, wind, icon } = weather;
   const weatherIcon = document.getElementById("weather-icon");
   const weatherStatus = document.getElementById("forecast-description");
   const weatherLocation = document.getElementById("location-display");
@@ -103,7 +103,7 @@ function processWeather(weather) {
   const weatherWind = document.getElementById("wind");
   weatherIcon.src = icon;
   weatherStatus.textContent = status;
-  weatherLocation.textContent = location + ", " + weather.countryAbbrev;
+  weatherLocation.textContent = location + ", " + countryAbbrev;
   weatherTemp.textContent = temp;
   weatherFeels.textContent = feels;
   weatherHumidity.textContent = humidity;
