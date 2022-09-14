@@ -120,6 +120,7 @@ function showSpinner() {
     <div></div>
   </div>`;
 }
+
 function hideSpinner() {
   const loadingDiv = document.querySelector(".loading-spinner");
   loadingDiv.classList.remove("active");
