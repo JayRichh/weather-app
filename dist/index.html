@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <link rel="icon" href="https://img.icons8.com/ios/50/000000/sun--v1.png" />
+    <script
+      src="https://kit.fontawesome.com/050b08560f.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="/dist/style.css" />
+  </head>
+  <body id="content">
+    <div class="loading-spinner"></div>
+    <form class="input-container">
+      <input
+        type="text"
+        name="location"
+        id="location-input"
+        placeholder="Search city"
+        return="false"
+      />
+      <span id="error-message"></span>
+    </form>
+    <div class="weather-button">
+      <div class="weather-container">
+        <div class="weather-header">
+          <div class="location-description">
+            <h3 id="forecast-description"></h3>
+            <h2 id="location-display"></h2>
+          </div>
+          <img src="#" alt="weather-icon" id="weather-icon" />
+        </div>
+        <div class="weather-body">
+          <div class="temp-container">
+            <h1 id="temperature-reading"></h1>
+            <span id="units">&#8451;</span>
+          </div>
+          <div class="weather-details">
+            <div class="weather-detail-feels">
+              <h3>Feels like:</h3>
+              <div class="temp-container">
+                <h2 id="feels-like"></h2>
+                <span id="units">&#8451;</span>
+              </div>
+            </div>
+            <div class="weather-detail-humid">
+              <h3>Humidity:</h3>
+              <h2 id="humidity"></h2>
+            </div>
+            <div class="weather-detail-wind">
+              <h3>Wind Speed:</h3>
+              <h2 id="wind"></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="change-units">Change Units</button>
+    </div>
+    <p class="credits">
+      <a href="https://github.com/JayRichh" target="_blank">
+        Created by Jayden
+        <i class="fab fa-github"></i
+      ></a>
+    </p>
+  </body>
+  <!-- <div class="fireflies">
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+  <div class="firefly"></div>
+</div> -->
+</html>
+<!-- credit to https://codepen.io/alvarotrigo/pen/KKvGNOj for the fireflies -->

@@ -1,0 +1,2531 @@
+@import url("http://fonts.cdnfonts.com/css/merriweather-2");
+* {
+  box-sizing: border-box;
+  font-family: "Merriweather", serif;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+  background: url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg);
+  background-size: cover;
+  font-weight: 300;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+body input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  padding: 10px 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #e0e0e0;
+  opacity: 0.5;
+}
+body input:focus {
+  outline: none;
+  opacity: 1;
+}
+body input::-moz-placeholder {
+  color: #3b3b4c;
+  padding: 0 20px;
+  font-weight: 300;
+}
+body input:-ms-input-placeholder {
+  color: #3b3b4c;
+  padding: 0 20px;
+  font-weight: 300;
+}
+body input::placeholder {
+  color: #3b3b4c;
+  padding: 0 20px;
+  font-weight: 300;
+}
+body #error-message {
+  position: absolute;
+  color: red;
+  top: 50px;
+  right: 0;
+  font-size: 20px;
+  padding: 10px 10px;
+  margin: 10px;
+}
+body .loading-spinner {
+  display: none;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .loading-spinner.active {
+  z-index: 0;
+  display: block;
+}
+body .weather-button {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+body .weather-button #change-units {
+  position: relative;
+  font-size: 20px;
+  padding: 5px 10px;
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #a5a5a5;
+}
+body .weather-button #change-units:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+body .weather-button #change-units:active {
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+body .weather-container {
+  position: relative;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1;
+}
+body .weather-container .weather-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px 0;
+}
+body .weather-container .weather-header > :last-child {
+  scale: 2;
+}
+body .weather-container .weather-header > :first-child {
+  height: 100%;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body .weather-container .weather-header > :first-child h3 {
+  font-size: 1.5rem;
+  height: 50%;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+body .weather-container .weather-header > :first-child h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  height: 50%;
+}
+body .weather-container .weather-body {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+body .weather-container .weather-body .temp-container {
+  display: flex;
+  position: relative;
+}
+body .weather-container .weather-body .temp-container span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  padding: 10px 10px;
+  margin: 10px;
+}
+body .weather-container .weather-body #temperature-reading {
+  position: relative;
+  font-size: 5rem;
+  font-weight: bolder;
+  grid: 1/1/2/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem 1rem 1rem;
+}
+body .weather-container .weather-body .weather-details {
+  display: grid;
+  grid-template: 1fr 1fr 1fr/1fr;
+}
+body .weather-container .weather-body .weather-details > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  height: auto;
+}
+body .weather-container .weather-body .weather-details > * h3 {
+  font-size: 1rem;
+  font-weight: 300;
+  margin-right: 10px;
+}
+body .weather-container .weather-body .weather-details > *:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+body .weather-container .weather-body .weather-details > *:first-child div > #units {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  right: -20px;
+  font-size: 1rem;
+}
+body .weather-container .weather-body .weather-details > *:last-child {
+  border-bottom: none;
+}
+body .credits {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 20px;
+  font-size: 16px;
+  color: #fff;
+  opacity: 0.5;
+}
+body .credits a {
+  text-decoration: none;
+  color: #fff;
+}
+body .credits:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.firefly {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 0.4vw;
+  height: 0.4vw;
+  margin: -0.2vw 0 0 9.8vw;
+  -webkit-animation: ease 200s alternate infinite;
+          animation: ease 200s alternate infinite;
+  pointer-events: none;
+}
+.firefly::before, .firefly::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform-origin: -10vw;
+}
+.firefly::before {
+  background: black;
+  opacity: 0.4;
+  -webkit-animation: drift ease alternate infinite;
+          animation: drift ease alternate infinite;
+}
+.firefly::after {
+  background: white;
+  opacity: 0;
+  box-shadow: 0 0 0vw 0vw yellow;
+  -webkit-animation: drift ease alternate infinite, flash ease infinite;
+          animation: drift ease alternate infinite, flash ease infinite;
+}
+
+.firefly:nth-child(1) {
+  -webkit-animation-name: move1;
+          animation-name: move1;
+}
+.firefly:nth-child(1)::before {
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
+}
+.firefly:nth-child(1)::after {
+  -webkit-animation-duration: 10s, 10665ms;
+          animation-duration: 10s, 10665ms;
+  -webkit-animation-delay: 0ms, 6931ms;
+          animation-delay: 0ms, 6931ms;
+}
+
+@-webkit-keyframes move1 {
+  0% {
+    transform: translateX(34vw) translateY(24vh) scale(0.76);
+  }
+  5.8823529412% {
+    transform: translateX(7vw) translateY(11vh) scale(0.97);
+  }
+  11.7647058824% {
+    transform: translateX(26vw) translateY(-31vh) scale(0.82);
+  }
+  17.6470588235% {
+    transform: translateX(-27vw) translateY(2vh) scale(0.99);
+  }
+  23.5294117647% {
+    transform: translateX(9vw) translateY(-43vh) scale(0.92);
+  }
+  29.4117647059% {
+    transform: translateX(46vw) translateY(14vh) scale(0.99);
+  }
+  35.2941176471% {
+    transform: translateX(45vw) translateY(13vh) scale(0.46);
+  }
+  41.1764705882% {
+    transform: translateX(-12vw) translateY(19vh) scale(0.81);
+  }
+  47.0588235294% {
+    transform: translateX(12vw) translateY(-38vh) scale(0.79);
+  }
+  52.9411764706% {
+    transform: translateX(27vw) translateY(8vh) scale(0.36);
+  }
+  58.8235294118% {
+    transform: translateX(-11vw) translateY(-23vh) scale(0.35);
+  }
+  64.7058823529% {
+    transform: translateX(38vw) translateY(12vh) scale(0.78);
+  }
+  70.5882352941% {
+    transform: translateX(8vw) translateY(-22vh) scale(0.71);
+  }
+  76.4705882353% {
+    transform: translateX(-7vw) translateY(-9vh) scale(0.5);
+  }
+  82.3529411765% {
+    transform: translateX(42vw) translateY(-45vh) scale(0.67);
+  }
+  88.2352941176% {
+    transform: translateX(8vw) translateY(35vh) scale(0.34);
+  }
+  94.1176470588% {
+    transform: translateX(9vw) translateY(16vh) scale(0.44);
+  }
+  100% {
+    transform: translateX(50vw) translateY(0vh) scale(0.33);
+  }
+}
+
+@keyframes move1 {
+  0% {
+    transform: translateX(34vw) translateY(24vh) scale(0.76);
+  }
+  5.8823529412% {
+    transform: translateX(7vw) translateY(11vh) scale(0.97);
+  }
+  11.7647058824% {
+    transform: translateX(26vw) translateY(-31vh) scale(0.82);
+  }
+  17.6470588235% {
+    transform: translateX(-27vw) translateY(2vh) scale(0.99);
+  }
+  23.5294117647% {
+    transform: translateX(9vw) translateY(-43vh) scale(0.92);
+  }
+  29.4117647059% {
+    transform: translateX(46vw) translateY(14vh) scale(0.99);
+  }
+  35.2941176471% {
+    transform: translateX(45vw) translateY(13vh) scale(0.46);
+  }
+  41.1764705882% {
+    transform: translateX(-12vw) translateY(19vh) scale(0.81);
+  }
+  47.0588235294% {
+    transform: translateX(12vw) translateY(-38vh) scale(0.79);
+  }
+  52.9411764706% {
+    transform: translateX(27vw) translateY(8vh) scale(0.36);
+  }
+  58.8235294118% {
+    transform: translateX(-11vw) translateY(-23vh) scale(0.35);
+  }
+  64.7058823529% {
+    transform: translateX(38vw) translateY(12vh) scale(0.78);
+  }
+  70.5882352941% {
+    transform: translateX(8vw) translateY(-22vh) scale(0.71);
+  }
+  76.4705882353% {
+    transform: translateX(-7vw) translateY(-9vh) scale(0.5);
+  }
+  82.3529411765% {
+    transform: translateX(42vw) translateY(-45vh) scale(0.67);
+  }
+  88.2352941176% {
+    transform: translateX(8vw) translateY(35vh) scale(0.34);
+  }
+  94.1176470588% {
+    transform: translateX(9vw) translateY(16vh) scale(0.44);
+  }
+  100% {
+    transform: translateX(50vw) translateY(0vh) scale(0.33);
+  }
+}
+.firefly:nth-child(2) {
+  -webkit-animation-name: move2;
+          animation-name: move2;
+}
+.firefly:nth-child(2)::before {
+  -webkit-animation-duration: 17s;
+          animation-duration: 17s;
+}
+.firefly:nth-child(2)::after {
+  -webkit-animation-duration: 17s, 7821ms;
+          animation-duration: 17s, 7821ms;
+  -webkit-animation-delay: 0ms, 2281ms;
+          animation-delay: 0ms, 2281ms;
+}
+
+@-webkit-keyframes move2 {
+  0% {
+    transform: translateX(47vw) translateY(-19vh) scale(0.77);
+  }
+  4.5454545455% {
+    transform: translateX(-19vw) translateY(39vh) scale(0.26);
+  }
+  9.0909090909% {
+    transform: translateX(-17vw) translateY(-3vh) scale(0.62);
+  }
+  13.6363636364% {
+    transform: translateX(7vw) translateY(23vh) scale(0.79);
+  }
+  18.1818181818% {
+    transform: translateX(-34vw) translateY(7vh) scale(0.27);
+  }
+  22.7272727273% {
+    transform: translateX(18vw) translateY(-44vh) scale(0.89);
+  }
+  27.2727272727% {
+    transform: translateX(-38vw) translateY(23vh) scale(0.43);
+  }
+  31.8181818182% {
+    transform: translateX(-22vw) translateY(46vh) scale(0.85);
+  }
+  36.3636363636% {
+    transform: translateX(26vw) translateY(-37vh) scale(0.3);
+  }
+  40.9090909091% {
+    transform: translateX(49vw) translateY(-49vh) scale(0.42);
+  }
+  45.4545454545% {
+    transform: translateX(-40vw) translateY(35vh) scale(0.43);
+  }
+  50% {
+    transform: translateX(-18vw) translateY(29vh) scale(0.29);
+  }
+  54.5454545455% {
+    transform: translateX(25vw) translateY(-5vh) scale(0.64);
+  }
+  59.0909090909% {
+    transform: translateX(34vw) translateY(-9vh) scale(0.41);
+  }
+  63.6363636364% {
+    transform: translateX(5vw) translateY(1vh) scale(0.86);
+  }
+  68.1818181818% {
+    transform: translateX(50vw) translateY(47vh) scale(0.81);
+  }
+  72.7272727273% {
+    transform: translateX(25vw) translateY(50vh) scale(0.45);
+  }
+  77.2727272727% {
+    transform: translateX(24vw) translateY(-32vh) scale(0.39);
+  }
+  81.8181818182% {
+    transform: translateX(-44vw) translateY(-26vh) scale(0.75);
+  }
+  86.3636363636% {
+    transform: translateX(25vw) translateY(-40vh) scale(0.65);
+  }
+  90.9090909091% {
+    transform: translateX(29vw) translateY(40vh) scale(0.69);
+  }
+  95.4545454545% {
+    transform: translateX(-11vw) translateY(-45vh) scale(0.79);
+  }
+  100% {
+    transform: translateX(23vw) translateY(44vh) scale(0.76);
+  }
+}
+
+@keyframes move2 {
+  0% {
+    transform: translateX(47vw) translateY(-19vh) scale(0.77);
+  }
+  4.5454545455% {
+    transform: translateX(-19vw) translateY(39vh) scale(0.26);
+  }
+  9.0909090909% {
+    transform: translateX(-17vw) translateY(-3vh) scale(0.62);
+  }
+  13.6363636364% {
+    transform: translateX(7vw) translateY(23vh) scale(0.79);
+  }
+  18.1818181818% {
+    transform: translateX(-34vw) translateY(7vh) scale(0.27);
+  }
+  22.7272727273% {
+    transform: translateX(18vw) translateY(-44vh) scale(0.89);
+  }
+  27.2727272727% {
+    transform: translateX(-38vw) translateY(23vh) scale(0.43);
+  }
+  31.8181818182% {
+    transform: translateX(-22vw) translateY(46vh) scale(0.85);
+  }
+  36.3636363636% {
+    transform: translateX(26vw) translateY(-37vh) scale(0.3);
+  }
+  40.9090909091% {
+    transform: translateX(49vw) translateY(-49vh) scale(0.42);
+  }
+  45.4545454545% {
+    transform: translateX(-40vw) translateY(35vh) scale(0.43);
+  }
+  50% {
+    transform: translateX(-18vw) translateY(29vh) scale(0.29);
+  }
+  54.5454545455% {
+    transform: translateX(25vw) translateY(-5vh) scale(0.64);
+  }
+  59.0909090909% {
+    transform: translateX(34vw) translateY(-9vh) scale(0.41);
+  }
+  63.6363636364% {
+    transform: translateX(5vw) translateY(1vh) scale(0.86);
+  }
+  68.1818181818% {
+    transform: translateX(50vw) translateY(47vh) scale(0.81);
+  }
+  72.7272727273% {
+    transform: translateX(25vw) translateY(50vh) scale(0.45);
+  }
+  77.2727272727% {
+    transform: translateX(24vw) translateY(-32vh) scale(0.39);
+  }
+  81.8181818182% {
+    transform: translateX(-44vw) translateY(-26vh) scale(0.75);
+  }
+  86.3636363636% {
+    transform: translateX(25vw) translateY(-40vh) scale(0.65);
+  }
+  90.9090909091% {
+    transform: translateX(29vw) translateY(40vh) scale(0.69);
+  }
+  95.4545454545% {
+    transform: translateX(-11vw) translateY(-45vh) scale(0.79);
+  }
+  100% {
+    transform: translateX(23vw) translateY(44vh) scale(0.76);
+  }
+}
+.firefly:nth-child(3) {
+  -webkit-animation-name: move3;
+          animation-name: move3;
+}
+.firefly:nth-child(3)::before {
+  -webkit-animation-duration: 9s;
+          animation-duration: 9s;
+}
+.firefly:nth-child(3)::after {
+  -webkit-animation-duration: 9s, 7162ms;
+          animation-duration: 9s, 7162ms;
+  -webkit-animation-delay: 0ms, 7976ms;
+          animation-delay: 0ms, 7976ms;
+}
+
+@-webkit-keyframes move3 {
+  0% {
+    transform: translateX(24vw) translateY(11vh) scale(0.46);
+  }
+  4.1666666667% {
+    transform: translateX(29vw) translateY(1vh) scale(0.44);
+  }
+  8.3333333333% {
+    transform: translateX(-26vw) translateY(-12vh) scale(0.67);
+  }
+  12.5% {
+    transform: translateX(-23vw) translateY(-44vh) scale(0.98);
+  }
+  16.6666666667% {
+    transform: translateX(-1vw) translateY(14vh) scale(0.78);
+  }
+  20.8333333333% {
+    transform: translateX(37vw) translateY(-23vh) scale(0.35);
+  }
+  25% {
+    transform: translateX(33vw) translateY(-26vh) scale(0.65);
+  }
+  29.1666666667% {
+    transform: translateX(0vw) translateY(12vh) scale(0.96);
+  }
+  33.3333333333% {
+    transform: translateX(-36vw) translateY(-17vh) scale(0.39);
+  }
+  37.5% {
+    transform: translateX(20vw) translateY(41vh) scale(0.92);
+  }
+  41.6666666667% {
+    transform: translateX(-47vw) translateY(29vh) scale(0.55);
+  }
+  45.8333333333% {
+    transform: translateX(28vw) translateY(-18vh) scale(0.3);
+  }
+  50% {
+    transform: translateX(-34vw) translateY(44vh) scale(0.99);
+  }
+  54.1666666667% {
+    transform: translateX(-19vw) translateY(-43vh) scale(0.39);
+  }
+  58.3333333333% {
+    transform: translateX(28vw) translateY(28vh) scale(0.44);
+  }
+  62.5% {
+    transform: translateX(41vw) translateY(0vh) scale(0.93);
+  }
+  66.6666666667% {
+    transform: translateX(28vw) translateY(39vh) scale(0.6);
+  }
+  70.8333333333% {
+    transform: translateX(24vw) translateY(0vh) scale(0.62);
+  }
+  75% {
+    transform: translateX(28vw) translateY(-48vh) scale(0.65);
+  }
+  79.1666666667% {
+    transform: translateX(11vw) translateY(42vh) scale(0.63);
+  }
+  83.3333333333% {
+    transform: translateX(-26vw) translateY(-8vh) scale(0.4);
+  }
+  87.5% {
+    transform: translateX(31vw) translateY(-48vh) scale(0.74);
+  }
+  91.6666666667% {
+    transform: translateX(9vw) translateY(-42vh) scale(0.95);
+  }
+  95.8333333333% {
+    transform: translateX(33vw) translateY(10vh) scale(0.87);
+  }
+  100% {
+    transform: translateX(-36vw) translateY(-18vh) scale(0.86);
+  }
+}
+
+@keyframes move3 {
+  0% {
+    transform: translateX(24vw) translateY(11vh) scale(0.46);
+  }
+  4.1666666667% {
+    transform: translateX(29vw) translateY(1vh) scale(0.44);
+  }
+  8.3333333333% {
+    transform: translateX(-26vw) translateY(-12vh) scale(0.67);
+  }
+  12.5% {
+    transform: translateX(-23vw) translateY(-44vh) scale(0.98);
+  }
+  16.6666666667% {
+    transform: translateX(-1vw) translateY(14vh) scale(0.78);
+  }
+  20.8333333333% {
+    transform: translateX(37vw) translateY(-23vh) scale(0.35);
+  }
+  25% {
+    transform: translateX(33vw) translateY(-26vh) scale(0.65);
+  }
+  29.1666666667% {
+    transform: translateX(0vw) translateY(12vh) scale(0.96);
+  }
+  33.3333333333% {
+    transform: translateX(-36vw) translateY(-17vh) scale(0.39);
+  }
+  37.5% {
+    transform: translateX(20vw) translateY(41vh) scale(0.92);
+  }
+  41.6666666667% {
+    transform: translateX(-47vw) translateY(29vh) scale(0.55);
+  }
+  45.8333333333% {
+    transform: translateX(28vw) translateY(-18vh) scale(0.3);
+  }
+  50% {
+    transform: translateX(-34vw) translateY(44vh) scale(0.99);
+  }
+  54.1666666667% {
+    transform: translateX(-19vw) translateY(-43vh) scale(0.39);
+  }
+  58.3333333333% {
+    transform: translateX(28vw) translateY(28vh) scale(0.44);
+  }
+  62.5% {
+    transform: translateX(41vw) translateY(0vh) scale(0.93);
+  }
+  66.6666666667% {
+    transform: translateX(28vw) translateY(39vh) scale(0.6);
+  }
+  70.8333333333% {
+    transform: translateX(24vw) translateY(0vh) scale(0.62);
+  }
+  75% {
+    transform: translateX(28vw) translateY(-48vh) scale(0.65);
+  }
+  79.1666666667% {
+    transform: translateX(11vw) translateY(42vh) scale(0.63);
+  }
+  83.3333333333% {
+    transform: translateX(-26vw) translateY(-8vh) scale(0.4);
+  }
+  87.5% {
+    transform: translateX(31vw) translateY(-48vh) scale(0.74);
+  }
+  91.6666666667% {
+    transform: translateX(9vw) translateY(-42vh) scale(0.95);
+  }
+  95.8333333333% {
+    transform: translateX(33vw) translateY(10vh) scale(0.87);
+  }
+  100% {
+    transform: translateX(-36vw) translateY(-18vh) scale(0.86);
+  }
+}
+.firefly:nth-child(4) {
+  -webkit-animation-name: move4;
+          animation-name: move4;
+}
+.firefly:nth-child(4)::before {
+  -webkit-animation-duration: 18s;
+          animation-duration: 18s;
+}
+.firefly:nth-child(4)::after {
+  -webkit-animation-duration: 18s, 6672ms;
+          animation-duration: 18s, 6672ms;
+  -webkit-animation-delay: 0ms, 3084ms;
+          animation-delay: 0ms, 3084ms;
+}
+
+@-webkit-keyframes move4 {
+  0% {
+    transform: translateX(-20vw) translateY(-13vh) scale(0.61);
+  }
+  5.8823529412% {
+    transform: translateX(27vw) translateY(-36vh) scale(0.46);
+  }
+  11.7647058824% {
+    transform: translateX(22vw) translateY(-19vh) scale(0.35);
+  }
+  17.6470588235% {
+    transform: translateX(28vw) translateY(44vh) scale(0.79);
+  }
+  23.5294117647% {
+    transform: translateX(-45vw) translateY(-16vh) scale(0.72);
+  }
+  29.4117647059% {
+    transform: translateX(-49vw) translateY(-37vh) scale(0.26);
+  }
+  35.2941176471% {
+    transform: translateX(35vw) translateY(19vh) scale(0.32);
+  }
+  41.1764705882% {
+    transform: translateX(32vw) translateY(-48vh) scale(0.76);
+  }
+  47.0588235294% {
+    transform: translateX(9vw) translateY(32vh) scale(0.58);
+  }
+  52.9411764706% {
+    transform: translateX(-43vw) translateY(38vh) scale(0.62);
+  }
+  58.8235294118% {
+    transform: translateX(19vw) translateY(-6vh) scale(0.33);
+  }
+  64.7058823529% {
+    transform: translateX(7vw) translateY(31vh) scale(0.62);
+  }
+  70.5882352941% {
+    transform: translateX(4vw) translateY(-4vh) scale(0.48);
+  }
+  76.4705882353% {
+    transform: translateX(-43vw) translateY(3vh) scale(0.43);
+  }
+  82.3529411765% {
+    transform: translateX(-38vw) translateY(-39vh) scale(0.74);
+  }
+  88.2352941176% {
+    transform: translateX(20vw) translateY(4vh) scale(0.98);
+  }
+  94.1176470588% {
+    transform: translateX(-5vw) translateY(37vh) scale(0.82);
+  }
+  100% {
+    transform: translateX(-30vw) translateY(-45vh) scale(0.54);
+  }
+}
+
+@keyframes move4 {
+  0% {
+    transform: translateX(-20vw) translateY(-13vh) scale(0.61);
+  }
+  5.8823529412% {
+    transform: translateX(27vw) translateY(-36vh) scale(0.46);
+  }
+  11.7647058824% {
+    transform: translateX(22vw) translateY(-19vh) scale(0.35);
+  }
+  17.6470588235% {
+    transform: translateX(28vw) translateY(44vh) scale(0.79);
+  }
+  23.5294117647% {
+    transform: translateX(-45vw) translateY(-16vh) scale(0.72);
+  }
+  29.4117647059% {
+    transform: translateX(-49vw) translateY(-37vh) scale(0.26);
+  }
+  35.2941176471% {
+    transform: translateX(35vw) translateY(19vh) scale(0.32);
+  }
+  41.1764705882% {
+    transform: translateX(32vw) translateY(-48vh) scale(0.76);
+  }
+  47.0588235294% {
+    transform: translateX(9vw) translateY(32vh) scale(0.58);
+  }
+  52.9411764706% {
+    transform: translateX(-43vw) translateY(38vh) scale(0.62);
+  }
+  58.8235294118% {
+    transform: translateX(19vw) translateY(-6vh) scale(0.33);
+  }
+  64.7058823529% {
+    transform: translateX(7vw) translateY(31vh) scale(0.62);
+  }
+  70.5882352941% {
+    transform: translateX(4vw) translateY(-4vh) scale(0.48);
+  }
+  76.4705882353% {
+    transform: translateX(-43vw) translateY(3vh) scale(0.43);
+  }
+  82.3529411765% {
+    transform: translateX(-38vw) translateY(-39vh) scale(0.74);
+  }
+  88.2352941176% {
+    transform: translateX(20vw) translateY(4vh) scale(0.98);
+  }
+  94.1176470588% {
+    transform: translateX(-5vw) translateY(37vh) scale(0.82);
+  }
+  100% {
+    transform: translateX(-30vw) translateY(-45vh) scale(0.54);
+  }
+}
+.firefly:nth-child(5) {
+  -webkit-animation-name: move5;
+          animation-name: move5;
+}
+.firefly:nth-child(5)::before {
+  -webkit-animation-duration: 17s;
+          animation-duration: 17s;
+}
+.firefly:nth-child(5)::after {
+  -webkit-animation-duration: 17s, 10736ms;
+          animation-duration: 17s, 10736ms;
+  -webkit-animation-delay: 0ms, 656ms;
+          animation-delay: 0ms, 656ms;
+}
+
+@-webkit-keyframes move5 {
+  0% {
+    transform: translateX(24vw) translateY(-30vh) scale(0.32);
+  }
+  4.7619047619% {
+    transform: translateX(-25vw) translateY(36vh) scale(0.45);
+  }
+  9.5238095238% {
+    transform: translateX(42vw) translateY(-38vh) scale(0.91);
+  }
+  14.2857142857% {
+    transform: translateX(44vw) translateY(36vh) scale(0.44);
+  }
+  19.0476190476% {
+    transform: translateX(42vw) translateY(-16vh) scale(0.31);
+  }
+  23.8095238095% {
+    transform: translateX(-42vw) translateY(8vh) scale(0.27);
+  }
+  28.5714285714% {
+    transform: translateX(-45vw) translateY(17vh) scale(0.26);
+  }
+  33.3333333333% {
+    transform: translateX(-12vw) translateY(9vh) scale(0.37);
+  }
+  38.0952380952% {
+    transform: translateX(-36vw) translateY(49vh) scale(0.73);
+  }
+  42.8571428571% {
+    transform: translateX(-31vw) translateY(-14vh) scale(0.67);
+  }
+  47.619047619% {
+    transform: translateX(-45vw) translateY(2vh) scale(0.67);
+  }
+  52.380952381% {
+    transform: translateX(-37vw) translateY(-21vh) scale(0.62);
+  }
+  57.1428571429% {
+    transform: translateX(48vw) translateY(19vh) scale(0.65);
+  }
+  61.9047619048% {
+    transform: translateX(-1vw) translateY(-46vh) scale(1);
+  }
+  66.6666666667% {
+    transform: translateX(-39vw) translateY(-29vh) scale(0.66);
+  }
+  71.4285714286% {
+    transform: translateX(-39vw) translateY(27vh) scale(0.53);
+  }
+  76.1904761905% {
+    transform: translateX(-4vw) translateY(44vh) scale(0.8);
+  }
+  80.9523809524% {
+    transform: translateX(24vw) translateY(-5vh) scale(0.73);
+  }
+  85.7142857143% {
+    transform: translateX(-44vw) translateY(25vh) scale(0.83);
+  }
+  90.4761904762% {
+    transform: translateX(8vw) translateY(-22vh) scale(0.31);
+  }
+  95.2380952381% {
+    transform: translateX(15vw) translateY(-7vh) scale(0.89);
+  }
+  100% {
+    transform: translateX(42vw) translateY(-2vh) scale(0.81);
+  }
+}
+
+@keyframes move5 {
+  0% {
+    transform: translateX(24vw) translateY(-30vh) scale(0.32);
+  }
+  4.7619047619% {
+    transform: translateX(-25vw) translateY(36vh) scale(0.45);
+  }
+  9.5238095238% {
+    transform: translateX(42vw) translateY(-38vh) scale(0.91);
+  }
+  14.2857142857% {
+    transform: translateX(44vw) translateY(36vh) scale(0.44);
+  }
+  19.0476190476% {
+    transform: translateX(42vw) translateY(-16vh) scale(0.31);
+  }
+  23.8095238095% {
+    transform: translateX(-42vw) translateY(8vh) scale(0.27);
+  }
+  28.5714285714% {
+    transform: translateX(-45vw) translateY(17vh) scale(0.26);
+  }
+  33.3333333333% {
+    transform: translateX(-12vw) translateY(9vh) scale(0.37);
+  }
+  38.0952380952% {
+    transform: translateX(-36vw) translateY(49vh) scale(0.73);
+  }
+  42.8571428571% {
+    transform: translateX(-31vw) translateY(-14vh) scale(0.67);
+  }
+  47.619047619% {
+    transform: translateX(-45vw) translateY(2vh) scale(0.67);
+  }
+  52.380952381% {
+    transform: translateX(-37vw) translateY(-21vh) scale(0.62);
+  }
+  57.1428571429% {
+    transform: translateX(48vw) translateY(19vh) scale(0.65);
+  }
+  61.9047619048% {
+    transform: translateX(-1vw) translateY(-46vh) scale(1);
+  }
+  66.6666666667% {
+    transform: translateX(-39vw) translateY(-29vh) scale(0.66);
+  }
+  71.4285714286% {
+    transform: translateX(-39vw) translateY(27vh) scale(0.53);
+  }
+  76.1904761905% {
+    transform: translateX(-4vw) translateY(44vh) scale(0.8);
+  }
+  80.9523809524% {
+    transform: translateX(24vw) translateY(-5vh) scale(0.73);
+  }
+  85.7142857143% {
+    transform: translateX(-44vw) translateY(25vh) scale(0.83);
+  }
+  90.4761904762% {
+    transform: translateX(8vw) translateY(-22vh) scale(0.31);
+  }
+  95.2380952381% {
+    transform: translateX(15vw) translateY(-7vh) scale(0.89);
+  }
+  100% {
+    transform: translateX(42vw) translateY(-2vh) scale(0.81);
+  }
+}
+.firefly:nth-child(6) {
+  -webkit-animation-name: move6;
+          animation-name: move6;
+}
+.firefly:nth-child(6)::before {
+  -webkit-animation-duration: 14s;
+          animation-duration: 14s;
+}
+.firefly:nth-child(6)::after {
+  -webkit-animation-duration: 14s, 5659ms;
+          animation-duration: 14s, 5659ms;
+  -webkit-animation-delay: 0ms, 4062ms;
+          animation-delay: 0ms, 4062ms;
+}
+
+@-webkit-keyframes move6 {
+  0% {
+    transform: translateX(8vw) translateY(3vh) scale(0.87);
+  }
+  5.2631578947% {
+    transform: translateX(-22vw) translateY(-48vh) scale(0.83);
+  }
+  10.5263157895% {
+    transform: translateX(-47vw) translateY(21vh) scale(0.92);
+  }
+  15.7894736842% {
+    transform: translateX(-5vw) translateY(13vh) scale(0.76);
+  }
+  21.0526315789% {
+    transform: translateX(-3vw) translateY(-4vh) scale(0.7);
+  }
+  26.3157894737% {
+    transform: translateX(-1vw) translateY(-23vh) scale(0.67);
+  }
+  31.5789473684% {
+    transform: translateX(-6vw) translateY(-23vh) scale(0.92);
+  }
+  36.8421052632% {
+    transform: translateX(-30vw) translateY(-21vh) scale(0.48);
+  }
+  42.1052631579% {
+    transform: translateX(40vw) translateY(-31vh) scale(0.56);
+  }
+  47.3684210526% {
+    transform: translateX(23vw) translateY(6vh) scale(0.94);
+  }
+  52.6315789474% {
+    transform: translateX(-1vw) translateY(-38vh) scale(0.35);
+  }
+  57.8947368421% {
+    transform: translateX(50vw) translateY(-31vh) scale(0.29);
+  }
+  63.1578947368% {
+    transform: translateX(-42vw) translateY(40vh) scale(0.54);
+  }
+  68.4210526316% {
+    transform: translateX(15vw) translateY(-46vh) scale(0.46);
+  }
+  73.6842105263% {
+    transform: translateX(38vw) translateY(-35vh) scale(0.44);
+  }
+  78.9473684211% {
+    transform: translateX(-42vw) translateY(28vh) scale(0.39);
+  }
+  84.2105263158% {
+    transform: translateX(50vw) translateY(13vh) scale(0.84);
+  }
+  89.4736842105% {
+    transform: translateX(-11vw) translateY(-34vh) scale(0.92);
+  }
+  94.7368421053% {
+    transform: translateX(21vw) translateY(13vh) scale(0.28);
+  }
+  100% {
+    transform: translateX(39vw) translateY(4vh) scale(0.76);
+  }
+}
+
+@keyframes move6 {
+  0% {
+    transform: translateX(8vw) translateY(3vh) scale(0.87);
+  }
+  5.2631578947% {
+    transform: translateX(-22vw) translateY(-48vh) scale(0.83);
+  }
+  10.5263157895% {
+    transform: translateX(-47vw) translateY(21vh) scale(0.92);
+  }
+  15.7894736842% {
+    transform: translateX(-5vw) translateY(13vh) scale(0.76);
+  }
+  21.0526315789% {
+    transform: translateX(-3vw) translateY(-4vh) scale(0.7);
+  }
+  26.3157894737% {
+    transform: translateX(-1vw) translateY(-23vh) scale(0.67);
+  }
+  31.5789473684% {
+    transform: translateX(-6vw) translateY(-23vh) scale(0.92);
+  }
+  36.8421052632% {
+    transform: translateX(-30vw) translateY(-21vh) scale(0.48);
+  }
+  42.1052631579% {
+    transform: translateX(40vw) translateY(-31vh) scale(0.56);
+  }
+  47.3684210526% {
+    transform: translateX(23vw) translateY(6vh) scale(0.94);
+  }
+  52.6315789474% {
+    transform: translateX(-1vw) translateY(-38vh) scale(0.35);
+  }
+  57.8947368421% {
+    transform: translateX(50vw) translateY(-31vh) scale(0.29);
+  }
+  63.1578947368% {
+    transform: translateX(-42vw) translateY(40vh) scale(0.54);
+  }
+  68.4210526316% {
+    transform: translateX(15vw) translateY(-46vh) scale(0.46);
+  }
+  73.6842105263% {
+    transform: translateX(38vw) translateY(-35vh) scale(0.44);
+  }
+  78.9473684211% {
+    transform: translateX(-42vw) translateY(28vh) scale(0.39);
+  }
+  84.2105263158% {
+    transform: translateX(50vw) translateY(13vh) scale(0.84);
+  }
+  89.4736842105% {
+    transform: translateX(-11vw) translateY(-34vh) scale(0.92);
+  }
+  94.7368421053% {
+    transform: translateX(21vw) translateY(13vh) scale(0.28);
+  }
+  100% {
+    transform: translateX(39vw) translateY(4vh) scale(0.76);
+  }
+}
+.firefly:nth-child(7) {
+  -webkit-animation-name: move7;
+          animation-name: move7;
+}
+.firefly:nth-child(7)::before {
+  -webkit-animation-duration: 17s;
+          animation-duration: 17s;
+}
+.firefly:nth-child(7)::after {
+  -webkit-animation-duration: 17s, 7529ms;
+          animation-duration: 17s, 7529ms;
+  -webkit-animation-delay: 0ms, 2252ms;
+          animation-delay: 0ms, 2252ms;
+}
+
+@-webkit-keyframes move7 {
+  0% {
+    transform: translateX(-8vw) translateY(-5vh) scale(0.87);
+  }
+  5.8823529412% {
+    transform: translateX(-47vw) translateY(-10vh) scale(0.76);
+  }
+  11.7647058824% {
+    transform: translateX(1vw) translateY(26vh) scale(0.88);
+  }
+  17.6470588235% {
+    transform: translateX(1vw) translateY(-9vh) scale(0.63);
+  }
+  23.5294117647% {
+    transform: translateX(43vw) translateY(-34vh) scale(0.96);
+  }
+  29.4117647059% {
+    transform: translateX(22vw) translateY(-31vh) scale(0.61);
+  }
+  35.2941176471% {
+    transform: translateX(34vw) translateY(-34vh) scale(0.94);
+  }
+  41.1764705882% {
+    transform: translateX(12vw) translateY(-26vh) scale(0.65);
+  }
+  47.0588235294% {
+    transform: translateX(-40vw) translateY(24vh) scale(0.35);
+  }
+  52.9411764706% {
+    transform: translateX(-17vw) translateY(-18vh) scale(0.94);
+  }
+  58.8235294118% {
+    transform: translateX(16vw) translateY(-42vh) scale(0.88);
+  }
+  64.7058823529% {
+    transform: translateX(-22vw) translateY(-42vh) scale(0.52);
+  }
+  70.5882352941% {
+    transform: translateX(-16vw) translateY(-6vh) scale(0.95);
+  }
+  76.4705882353% {
+    transform: translateX(48vw) translateY(-35vh) scale(0.58);
+  }
+  82.3529411765% {
+    transform: translateX(-4vw) translateY(37vh) scale(0.52);
+  }
+  88.2352941176% {
+    transform: translateX(9vw) translateY(-6vh) scale(0.33);
+  }
+  94.1176470588% {
+    transform: translateX(8vw) translateY(26vh) scale(0.77);
+  }
+  100% {
+    transform: translateX(0vw) translateY(6vh) scale(0.75);
+  }
+}
+
+@keyframes move7 {
+  0% {
+    transform: translateX(-8vw) translateY(-5vh) scale(0.87);
+  }
+  5.8823529412% {
+    transform: translateX(-47vw) translateY(-10vh) scale(0.76);
+  }
+  11.7647058824% {
+    transform: translateX(1vw) translateY(26vh) scale(0.88);
+  }
+  17.6470588235% {
+    transform: translateX(1vw) translateY(-9vh) scale(0.63);
+  }
+  23.5294117647% {
+    transform: translateX(43vw) translateY(-34vh) scale(0.96);
+  }
+  29.4117647059% {
+    transform: translateX(22vw) translateY(-31vh) scale(0.61);
+  }
+  35.2941176471% {
+    transform: translateX(34vw) translateY(-34vh) scale(0.94);
+  }
+  41.1764705882% {
+    transform: translateX(12vw) translateY(-26vh) scale(0.65);
+  }
+  47.0588235294% {
+    transform: translateX(-40vw) translateY(24vh) scale(0.35);
+  }
+  52.9411764706% {
+    transform: translateX(-17vw) translateY(-18vh) scale(0.94);
+  }
+  58.8235294118% {
+    transform: translateX(16vw) translateY(-42vh) scale(0.88);
+  }
+  64.7058823529% {
+    transform: translateX(-22vw) translateY(-42vh) scale(0.52);
+  }
+  70.5882352941% {
+    transform: translateX(-16vw) translateY(-6vh) scale(0.95);
+  }
+  76.4705882353% {
+    transform: translateX(48vw) translateY(-35vh) scale(0.58);
+  }
+  82.3529411765% {
+    transform: translateX(-4vw) translateY(37vh) scale(0.52);
+  }
+  88.2352941176% {
+    transform: translateX(9vw) translateY(-6vh) scale(0.33);
+  }
+  94.1176470588% {
+    transform: translateX(8vw) translateY(26vh) scale(0.77);
+  }
+  100% {
+    transform: translateX(0vw) translateY(6vh) scale(0.75);
+  }
+}
+.firefly:nth-child(8) {
+  -webkit-animation-name: move8;
+          animation-name: move8;
+}
+.firefly:nth-child(8)::before {
+  -webkit-animation-duration: 18s;
+          animation-duration: 18s;
+}
+.firefly:nth-child(8)::after {
+  -webkit-animation-duration: 18s, 8989ms;
+          animation-duration: 18s, 8989ms;
+  -webkit-animation-delay: 0ms, 2605ms;
+          animation-delay: 0ms, 2605ms;
+}
+
+@-webkit-keyframes move8 {
+  0% {
+    transform: translateX(-38vw) translateY(31vh) scale(0.51);
+  }
+  5.2631578947% {
+    transform: translateX(37vw) translateY(3vh) scale(0.42);
+  }
+  10.5263157895% {
+    transform: translateX(19vw) translateY(45vh) scale(0.98);
+  }
+  15.7894736842% {
+    transform: translateX(-42vw) translateY(8vh) scale(0.71);
+  }
+  21.0526315789% {
+    transform: translateX(-16vw) translateY(23vh) scale(0.36);
+  }
+  26.3157894737% {
+    transform: translateX(1vw) translateY(-17vh) scale(0.76);
+  }
+  31.5789473684% {
+    transform: translateX(35vw) translateY(-9vh) scale(0.3);
+  }
+  36.8421052632% {
+    transform: translateX(7vw) translateY(9vh) scale(0.44);
+  }
+  42.1052631579% {
+    transform: translateX(14vw) translateY(11vh) scale(0.61);
+  }
+  47.3684210526% {
+    transform: translateX(-41vw) translateY(43vh) scale(0.94);
+  }
+  52.6315789474% {
+    transform: translateX(-42vw) translateY(47vh) scale(0.39);
+  }
+  57.8947368421% {
+    transform: translateX(38vw) translateY(45vh) scale(0.53);
+  }
+  63.1578947368% {
+    transform: translateX(-10vw) translateY(48vh) scale(0.97);
+  }
+  68.4210526316% {
+    transform: translateX(-7vw) translateY(17vh) scale(0.57);
+  }
+  73.6842105263% {
+    transform: translateX(42vw) translateY(29vh) scale(0.37);
+  }
+  78.9473684211% {
+    transform: translateX(9vw) translateY(26vh) scale(0.6);
+  }
+  84.2105263158% {
+    transform: translateX(28vw) translateY(-45vh) scale(0.29);
+  }
+  89.4736842105% {
+    transform: translateX(35vw) translateY(-40vh) scale(0.74);
+  }
+  94.7368421053% {
+    transform: translateX(-13vw) translateY(-42vh) scale(0.79);
+  }
+  100% {
+    transform: translateX(38vw) translateY(16vh) scale(0.94);
+  }
+}
+
+@keyframes move8 {
+  0% {
+    transform: translateX(-38vw) translateY(31vh) scale(0.51);
+  }
+  5.2631578947% {
+    transform: translateX(37vw) translateY(3vh) scale(0.42);
+  }
+  10.5263157895% {
+    transform: translateX(19vw) translateY(45vh) scale(0.98);
+  }
+  15.7894736842% {
+    transform: translateX(-42vw) translateY(8vh) scale(0.71);
+  }
+  21.0526315789% {
+    transform: translateX(-16vw) translateY(23vh) scale(0.36);
+  }
+  26.3157894737% {
+    transform: translateX(1vw) translateY(-17vh) scale(0.76);
+  }
+  31.5789473684% {
+    transform: translateX(35vw) translateY(-9vh) scale(0.3);
+  }
+  36.8421052632% {
+    transform: translateX(7vw) translateY(9vh) scale(0.44);
+  }
+  42.1052631579% {
+    transform: translateX(14vw) translateY(11vh) scale(0.61);
+  }
+  47.3684210526% {
+    transform: translateX(-41vw) translateY(43vh) scale(0.94);
+  }
+  52.6315789474% {
+    transform: translateX(-42vw) translateY(47vh) scale(0.39);
+  }
+  57.8947368421% {
+    transform: translateX(38vw) translateY(45vh) scale(0.53);
+  }
+  63.1578947368% {
+    transform: translateX(-10vw) translateY(48vh) scale(0.97);
+  }
+  68.4210526316% {
+    transform: translateX(-7vw) translateY(17vh) scale(0.57);
+  }
+  73.6842105263% {
+    transform: translateX(42vw) translateY(29vh) scale(0.37);
+  }
+  78.9473684211% {
+    transform: translateX(9vw) translateY(26vh) scale(0.6);
+  }
+  84.2105263158% {
+    transform: translateX(28vw) translateY(-45vh) scale(0.29);
+  }
+  89.4736842105% {
+    transform: translateX(35vw) translateY(-40vh) scale(0.74);
+  }
+  94.7368421053% {
+    transform: translateX(-13vw) translateY(-42vh) scale(0.79);
+  }
+  100% {
+    transform: translateX(38vw) translateY(16vh) scale(0.94);
+  }
+}
+.firefly:nth-child(9) {
+  -webkit-animation-name: move9;
+          animation-name: move9;
+}
+.firefly:nth-child(9)::before {
+  -webkit-animation-duration: 16s;
+          animation-duration: 16s;
+}
+.firefly:nth-child(9)::after {
+  -webkit-animation-duration: 16s, 8096ms;
+          animation-duration: 16s, 8096ms;
+  -webkit-animation-delay: 0ms, 3352ms;
+          animation-delay: 0ms, 3352ms;
+}
+
+@-webkit-keyframes move9 {
+  0% {
+    transform: translateX(6vw) translateY(-35vh) scale(0.6);
+  }
+  5% {
+    transform: translateX(-47vw) translateY(-34vh) scale(0.59);
+  }
+  10% {
+    transform: translateX(-3vw) translateY(-24vh) scale(0.92);
+  }
+  15% {
+    transform: translateX(-1vw) translateY(-35vh) scale(0.93);
+  }
+  20% {
+    transform: translateX(7vw) translateY(-28vh) scale(0.65);
+  }
+  25% {
+    transform: translateX(36vw) translateY(-45vh) scale(0.46);
+  }
+  30% {
+    transform: translateX(-15vw) translateY(-2vh) scale(0.44);
+  }
+  35% {
+    transform: translateX(-18vw) translateY(38vh) scale(0.41);
+  }
+  40% {
+    transform: translateX(13vw) translateY(-31vh) scale(0.88);
+  }
+  45% {
+    transform: translateX(-17vw) translateY(35vh) scale(0.26);
+  }
+  50% {
+    transform: translateX(-36vw) translateY(48vh) scale(0.48);
+  }
+  55% {
+    transform: translateX(38vw) translateY(19vh) scale(0.4);
+  }
+  60% {
+    transform: translateX(-45vw) translateY(2vh) scale(0.65);
+  }
+  65% {
+    transform: translateX(-49vw) translateY(-23vh) scale(1);
+  }
+  70% {
+    transform: translateX(-13vw) translateY(-3vh) scale(0.8);
+  }
+  75% {
+    transform: translateX(-42vw) translateY(30vh) scale(0.58);
+  }
+  80% {
+    transform: translateX(12vw) translateY(50vh) scale(1);
+  }
+  85% {
+    transform: translateX(50vw) translateY(-36vh) scale(0.89);
+  }
+  90% {
+    transform: translateX(-15vw) translateY(24vh) scale(0.4);
+  }
+  95% {
+    transform: translateX(29vw) translateY(-44vh) scale(0.55);
+  }
+  100% {
+    transform: translateX(50vw) translateY(0vh) scale(0.96);
+  }
+}
+
+@keyframes move9 {
+  0% {
+    transform: translateX(6vw) translateY(-35vh) scale(0.6);
+  }
+  5% {
+    transform: translateX(-47vw) translateY(-34vh) scale(0.59);
+  }
+  10% {
+    transform: translateX(-3vw) translateY(-24vh) scale(0.92);
+  }
+  15% {
+    transform: translateX(-1vw) translateY(-35vh) scale(0.93);
+  }
+  20% {
+    transform: translateX(7vw) translateY(-28vh) scale(0.65);
+  }
+  25% {
+    transform: translateX(36vw) translateY(-45vh) scale(0.46);
+  }
+  30% {
+    transform: translateX(-15vw) translateY(-2vh) scale(0.44);
+  }
+  35% {
+    transform: translateX(-18vw) translateY(38vh) scale(0.41);
+  }
+  40% {
+    transform: translateX(13vw) translateY(-31vh) scale(0.88);
+  }
+  45% {
+    transform: translateX(-17vw) translateY(35vh) scale(0.26);
+  }
+  50% {
+    transform: translateX(-36vw) translateY(48vh) scale(0.48);
+  }
+  55% {
+    transform: translateX(38vw) translateY(19vh) scale(0.4);
+  }
+  60% {
+    transform: translateX(-45vw) translateY(2vh) scale(0.65);
+  }
+  65% {
+    transform: translateX(-49vw) translateY(-23vh) scale(1);
+  }
+  70% {
+    transform: translateX(-13vw) translateY(-3vh) scale(0.8);
+  }
+  75% {
+    transform: translateX(-42vw) translateY(30vh) scale(0.58);
+  }
+  80% {
+    transform: translateX(12vw) translateY(50vh) scale(1);
+  }
+  85% {
+    transform: translateX(50vw) translateY(-36vh) scale(0.89);
+  }
+  90% {
+    transform: translateX(-15vw) translateY(24vh) scale(0.4);
+  }
+  95% {
+    transform: translateX(29vw) translateY(-44vh) scale(0.55);
+  }
+  100% {
+    transform: translateX(50vw) translateY(0vh) scale(0.96);
+  }
+}
+.firefly:nth-child(10) {
+  -webkit-animation-name: move10;
+          animation-name: move10;
+}
+.firefly:nth-child(10)::before {
+  -webkit-animation-duration: 13s;
+          animation-duration: 13s;
+}
+.firefly:nth-child(10)::after {
+  -webkit-animation-duration: 13s, 6545ms;
+          animation-duration: 13s, 6545ms;
+  -webkit-animation-delay: 0ms, 1016ms;
+          animation-delay: 0ms, 1016ms;
+}
+
+@-webkit-keyframes move10 {
+  0% {
+    transform: translateX(-11vw) translateY(-29vh) scale(0.45);
+  }
+  3.7037037037% {
+    transform: translateX(20vw) translateY(-48vh) scale(0.98);
+  }
+  7.4074074074% {
+    transform: translateX(-46vw) translateY(-28vh) scale(0.33);
+  }
+  11.1111111111% {
+    transform: translateX(13vw) translateY(-21vh) scale(0.68);
+  }
+  14.8148148148% {
+    transform: translateX(-19vw) translateY(-16vh) scale(0.64);
+  }
+  18.5185185185% {
+    transform: translateX(8vw) translateY(-25vh) scale(0.29);
+  }
+  22.2222222222% {
+    transform: translateX(7vw) translateY(-43vh) scale(0.94);
+  }
+  25.9259259259% {
+    transform: translateX(36vw) translateY(-18vh) scale(0.5);
+  }
+  29.6296296296% {
+    transform: translateX(23vw) translateY(25vh) scale(0.9);
+  }
+  33.3333333333% {
+    transform: translateX(-9vw) translateY(38vh) scale(0.27);
+  }
+  37.037037037% {
+    transform: translateX(-40vw) translateY(-15vh) scale(0.65);
+  }
+  40.7407407407% {
+    transform: translateX(25vw) translateY(-19vh) scale(0.71);
+  }
+  44.4444444444% {
+    transform: translateX(-40vw) translateY(-4vh) scale(0.67);
+  }
+  48.1481481481% {
+    transform: translateX(0vw) translateY(3vh) scale(0.57);
+  }
+  51.8518518519% {
+    transform: translateX(3vw) translateY(12vh) scale(0.6);
+  }
+  55.5555555556% {
+    transform: translateX(-40vw) translateY(37vh) scale(0.42);
+  }
+  59.2592592593% {
+    transform: translateX(34vw) translateY(-24vh) scale(0.93);
+  }
+  62.962962963% {
+    transform: translateX(10vw) translateY(42vh) scale(0.98);
+  }
+  66.6666666667% {
+    transform: translateX(20vw) translateY(31vh) scale(0.32);
+  }
+  70.3703703704% {
+    transform: translateX(-22vw) translateY(35vh) scale(0.26);
+  }
+  74.0740740741% {
+    transform: translateX(40vw) translateY(45vh) scale(0.33);
+  }
+  77.7777777778% {
+    transform: translateX(-16vw) translateY(-34vh) scale(0.64);
+  }
+  81.4814814815% {
+    transform: translateX(30vw) translateY(33vh) scale(0.31);
+  }
+  85.1851851852% {
+    transform: translateX(-26vw) translateY(11vh) scale(0.78);
+  }
+  88.8888888889% {
+    transform: translateX(-8vw) translateY(-26vh) scale(1);
+  }
+  92.5925925926% {
+    transform: translateX(-28vw) translateY(22vh) scale(0.55);
+  }
+  96.2962962963% {
+    transform: translateX(-30vw) translateY(-8vh) scale(0.28);
+  }
+  100% {
+    transform: translateX(41vw) translateY(-49vh) scale(0.83);
+  }
+}
+
+@keyframes move10 {
+  0% {
+    transform: translateX(-11vw) translateY(-29vh) scale(0.45);
+  }
+  3.7037037037% {
+    transform: translateX(20vw) translateY(-48vh) scale(0.98);
+  }
+  7.4074074074% {
+    transform: translateX(-46vw) translateY(-28vh) scale(0.33);
+  }
+  11.1111111111% {
+    transform: translateX(13vw) translateY(-21vh) scale(0.68);
+  }
+  14.8148148148% {
+    transform: translateX(-19vw) translateY(-16vh) scale(0.64);
+  }
+  18.5185185185% {
+    transform: translateX(8vw) translateY(-25vh) scale(0.29);
+  }
+  22.2222222222% {
+    transform: translateX(7vw) translateY(-43vh) scale(0.94);
+  }
+  25.9259259259% {
+    transform: translateX(36vw) translateY(-18vh) scale(0.5);
+  }
+  29.6296296296% {
+    transform: translateX(23vw) translateY(25vh) scale(0.9);
+  }
+  33.3333333333% {
+    transform: translateX(-9vw) translateY(38vh) scale(0.27);
+  }
+  37.037037037% {
+    transform: translateX(-40vw) translateY(-15vh) scale(0.65);
+  }
+  40.7407407407% {
+    transform: translateX(25vw) translateY(-19vh) scale(0.71);
+  }
+  44.4444444444% {
+    transform: translateX(-40vw) translateY(-4vh) scale(0.67);
+  }
+  48.1481481481% {
+    transform: translateX(0vw) translateY(3vh) scale(0.57);
+  }
+  51.8518518519% {
+    transform: translateX(3vw) translateY(12vh) scale(0.6);
+  }
+  55.5555555556% {
+    transform: translateX(-40vw) translateY(37vh) scale(0.42);
+  }
+  59.2592592593% {
+    transform: translateX(34vw) translateY(-24vh) scale(0.93);
+  }
+  62.962962963% {
+    transform: translateX(10vw) translateY(42vh) scale(0.98);
+  }
+  66.6666666667% {
+    transform: translateX(20vw) translateY(31vh) scale(0.32);
+  }
+  70.3703703704% {
+    transform: translateX(-22vw) translateY(35vh) scale(0.26);
+  }
+  74.0740740741% {
+    transform: translateX(40vw) translateY(45vh) scale(0.33);
+  }
+  77.7777777778% {
+    transform: translateX(-16vw) translateY(-34vh) scale(0.64);
+  }
+  81.4814814815% {
+    transform: translateX(30vw) translateY(33vh) scale(0.31);
+  }
+  85.1851851852% {
+    transform: translateX(-26vw) translateY(11vh) scale(0.78);
+  }
+  88.8888888889% {
+    transform: translateX(-8vw) translateY(-26vh) scale(1);
+  }
+  92.5925925926% {
+    transform: translateX(-28vw) translateY(22vh) scale(0.55);
+  }
+  96.2962962963% {
+    transform: translateX(-30vw) translateY(-8vh) scale(0.28);
+  }
+  100% {
+    transform: translateX(41vw) translateY(-49vh) scale(0.83);
+  }
+}
+.firefly:nth-child(11) {
+  -webkit-animation-name: move11;
+          animation-name: move11;
+}
+.firefly:nth-child(11)::before {
+  -webkit-animation-duration: 16s;
+          animation-duration: 16s;
+}
+.firefly:nth-child(11)::after {
+  -webkit-animation-duration: 16s, 9588ms;
+          animation-duration: 16s, 9588ms;
+  -webkit-animation-delay: 0ms, 4472ms;
+          animation-delay: 0ms, 4472ms;
+}
+
+@-webkit-keyframes move11 {
+  0% {
+    transform: translateX(-45vw) translateY(-29vh) scale(0.54);
+  }
+  5.8823529412% {
+    transform: translateX(40vw) translateY(-10vh) scale(0.76);
+  }
+  11.7647058824% {
+    transform: translateX(4vw) translateY(-25vh) scale(0.57);
+  }
+  17.6470588235% {
+    transform: translateX(-5vw) translateY(-49vh) scale(0.26);
+  }
+  23.5294117647% {
+    transform: translateX(46vw) translateY(-38vh) scale(0.85);
+  }
+  29.4117647059% {
+    transform: translateX(-40vw) translateY(21vh) scale(0.51);
+  }
+  35.2941176471% {
+    transform: translateX(-31vw) translateY(-29vh) scale(0.9);
+  }
+  41.1764705882% {
+    transform: translateX(-37vw) translateY(23vh) scale(0.64);
+  }
+  47.0588235294% {
+    transform: translateX(-32vw) translateY(45vh) scale(0.99);
+  }
+  52.9411764706% {
+    transform: translateX(19vw) translateY(26vh) scale(0.79);
+  }
+  58.8235294118% {
+    transform: translateX(-7vw) translateY(32vh) scale(0.31);
+  }
+  64.7058823529% {
+    transform: translateX(16vw) translateY(30vh) scale(0.31);
+  }
+  70.5882352941% {
+    transform: translateX(-25vw) translateY(-47vh) scale(0.77);
+  }
+  76.4705882353% {
+    transform: translateX(2vw) translateY(-31vh) scale(0.47);
+  }
+  82.3529411765% {
+    transform: translateX(-3vw) translateY(-31vh) scale(0.85);
+  }
+  88.2352941176% {
+    transform: translateX(50vw) translateY(-20vh) scale(0.26);
+  }
+  94.1176470588% {
+    transform: translateX(-3vw) translateY(-3vh) scale(0.89);
+  }
+  100% {
+    transform: translateX(-40vw) translateY(-32vh) scale(0.39);
+  }
+}
+
+@keyframes move11 {
+  0% {
+    transform: translateX(-45vw) translateY(-29vh) scale(0.54);
+  }
+  5.8823529412% {
+    transform: translateX(40vw) translateY(-10vh) scale(0.76);
+  }
+  11.7647058824% {
+    transform: translateX(4vw) translateY(-25vh) scale(0.57);
+  }
+  17.6470588235% {
+    transform: translateX(-5vw) translateY(-49vh) scale(0.26);
+  }
+  23.5294117647% {
+    transform: translateX(46vw) translateY(-38vh) scale(0.85);
+  }
+  29.4117647059% {
+    transform: translateX(-40vw) translateY(21vh) scale(0.51);
+  }
+  35.2941176471% {
+    transform: translateX(-31vw) translateY(-29vh) scale(0.9);
+  }
+  41.1764705882% {
+    transform: translateX(-37vw) translateY(23vh) scale(0.64);
+  }
+  47.0588235294% {
+    transform: translateX(-32vw) translateY(45vh) scale(0.99);
+  }
+  52.9411764706% {
+    transform: translateX(19vw) translateY(26vh) scale(0.79);
+  }
+  58.8235294118% {
+    transform: translateX(-7vw) translateY(32vh) scale(0.31);
+  }
+  64.7058823529% {
+    transform: translateX(16vw) translateY(30vh) scale(0.31);
+  }
+  70.5882352941% {
+    transform: translateX(-25vw) translateY(-47vh) scale(0.77);
+  }
+  76.4705882353% {
+    transform: translateX(2vw) translateY(-31vh) scale(0.47);
+  }
+  82.3529411765% {
+    transform: translateX(-3vw) translateY(-31vh) scale(0.85);
+  }
+  88.2352941176% {
+    transform: translateX(50vw) translateY(-20vh) scale(0.26);
+  }
+  94.1176470588% {
+    transform: translateX(-3vw) translateY(-3vh) scale(0.89);
+  }
+  100% {
+    transform: translateX(-40vw) translateY(-32vh) scale(0.39);
+  }
+}
+.firefly:nth-child(12) {
+  -webkit-animation-name: move12;
+          animation-name: move12;
+}
+.firefly:nth-child(12)::before {
+  -webkit-animation-duration: 17s;
+          animation-duration: 17s;
+}
+.firefly:nth-child(12)::after {
+  -webkit-animation-duration: 17s, 8289ms;
+          animation-duration: 17s, 8289ms;
+  -webkit-animation-delay: 0ms, 5249ms;
+          animation-delay: 0ms, 5249ms;
+}
+
+@-webkit-keyframes move12 {
+  0% {
+    transform: translateX(-37vw) translateY(36vh) scale(0.63);
+  }
+  5.8823529412% {
+    transform: translateX(8vw) translateY(1vh) scale(0.55);
+  }
+  11.7647058824% {
+    transform: translateX(32vw) translateY(-23vh) scale(0.56);
+  }
+  17.6470588235% {
+    transform: translateX(-35vw) translateY(0vh) scale(0.49);
+  }
+  23.5294117647% {
+    transform: translateX(-14vw) translateY(33vh) scale(1);
+  }
+  29.4117647059% {
+    transform: translateX(-36vw) translateY(-47vh) scale(0.86);
+  }
+  35.2941176471% {
+    transform: translateX(35vw) translateY(-22vh) scale(0.28);
+  }
+  41.1764705882% {
+    transform: translateX(23vw) translateY(19vh) scale(0.97);
+  }
+  47.0588235294% {
+    transform: translateX(7vw) translateY(-5vh) scale(0.29);
+  }
+  52.9411764706% {
+    transform: translateX(-42vw) translateY(5vh) scale(0.62);
+  }
+  58.8235294118% {
+    transform: translateX(46vw) translateY(15vh) scale(0.61);
+  }
+  64.7058823529% {
+    transform: translateX(34vw) translateY(24vh) scale(0.35);
+  }
+  70.5882352941% {
+    transform: translateX(6vw) translateY(-42vh) scale(0.83);
+  }
+  76.4705882353% {
+    transform: translateX(47vw) translateY(-21vh) scale(0.47);
+  }
+  82.3529411765% {
+    transform: translateX(-14vw) translateY(3vh) scale(0.82);
+  }
+  88.2352941176% {
+    transform: translateX(14vw) translateY(-1vh) scale(0.98);
+  }
+  94.1176470588% {
+    transform: translateX(-17vw) translateY(7vh) scale(0.41);
+  }
+  100% {
+    transform: translateX(-4vw) translateY(-30vh) scale(0.98);
+  }
+}
+
+@keyframes move12 {
+  0% {
+    transform: translateX(-37vw) translateY(36vh) scale(0.63);
+  }
+  5.8823529412% {
+    transform: translateX(8vw) translateY(1vh) scale(0.55);
+  }
+  11.7647058824% {
+    transform: translateX(32vw) translateY(-23vh) scale(0.56);
+  }
+  17.6470588235% {
+    transform: translateX(-35vw) translateY(0vh) scale(0.49);
+  }
+  23.5294117647% {
+    transform: translateX(-14vw) translateY(33vh) scale(1);
+  }
+  29.4117647059% {
+    transform: translateX(-36vw) translateY(-47vh) scale(0.86);
+  }
+  35.2941176471% {
+    transform: translateX(35vw) translateY(-22vh) scale(0.28);
+  }
+  41.1764705882% {
+    transform: translateX(23vw) translateY(19vh) scale(0.97);
+  }
+  47.0588235294% {
+    transform: translateX(7vw) translateY(-5vh) scale(0.29);
+  }
+  52.9411764706% {
+    transform: translateX(-42vw) translateY(5vh) scale(0.62);
+  }
+  58.8235294118% {
+    transform: translateX(46vw) translateY(15vh) scale(0.61);
+  }
+  64.7058823529% {
+    transform: translateX(34vw) translateY(24vh) scale(0.35);
+  }
+  70.5882352941% {
+    transform: translateX(6vw) translateY(-42vh) scale(0.83);
+  }
+  76.4705882353% {
+    transform: translateX(47vw) translateY(-21vh) scale(0.47);
+  }
+  82.3529411765% {
+    transform: translateX(-14vw) translateY(3vh) scale(0.82);
+  }
+  88.2352941176% {
+    transform: translateX(14vw) translateY(-1vh) scale(0.98);
+  }
+  94.1176470588% {
+    transform: translateX(-17vw) translateY(7vh) scale(0.41);
+  }
+  100% {
+    transform: translateX(-4vw) translateY(-30vh) scale(0.98);
+  }
+}
+.firefly:nth-child(13) {
+  -webkit-animation-name: move13;
+          animation-name: move13;
+}
+.firefly:nth-child(13)::before {
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
+}
+.firefly:nth-child(13)::after {
+  -webkit-animation-duration: 10s, 6054ms;
+          animation-duration: 10s, 6054ms;
+  -webkit-animation-delay: 0ms, 4908ms;
+          animation-delay: 0ms, 4908ms;
+}
+
+@-webkit-keyframes move13 {
+  0% {
+    transform: translateX(-40vw) translateY(10vh) scale(0.35);
+  }
+  4.347826087% {
+    transform: translateX(11vw) translateY(-7vh) scale(0.63);
+  }
+  8.6956521739% {
+    transform: translateX(40vw) translateY(38vh) scale(0.31);
+  }
+  13.0434782609% {
+    transform: translateX(22vw) translateY(-26vh) scale(0.87);
+  }
+  17.3913043478% {
+    transform: translateX(-25vw) translateY(-44vh) scale(0.61);
+  }
+  21.7391304348% {
+    transform: translateX(-6vw) translateY(-6vh) scale(0.31);
+  }
+  26.0869565217% {
+    transform: translateX(-9vw) translateY(-25vh) scale(0.48);
+  }
+  30.4347826087% {
+    transform: translateX(-18vw) translateY(40vh) scale(0.98);
+  }
+  34.7826086957% {
+    transform: translateX(40vw) translateY(42vh) scale(0.57);
+  }
+  39.1304347826% {
+    transform: translateX(28vw) translateY(-26vh) scale(0.73);
+  }
+  43.4782608696% {
+    transform: translateX(10vw) translateY(-22vh) scale(0.7);
+  }
+  47.8260869565% {
+    transform: translateX(-15vw) translateY(-18vh) scale(0.75);
+  }
+  52.1739130435% {
+    transform: translateX(-45vw) translateY(6vh) scale(0.4);
+  }
+  56.5217391304% {
+    transform: translateX(9vw) translateY(25vh) scale(0.52);
+  }
+  60.8695652174% {
+    transform: translateX(10vw) translateY(15vh) scale(0.36);
+  }
+  65.2173913043% {
+    transform: translateX(-46vw) translateY(22vh) scale(0.55);
+  }
+  69.5652173913% {
+    transform: translateX(16vw) translateY(-17vh) scale(0.66);
+  }
+  73.9130434783% {
+    transform: translateX(0vw) translateY(-14vh) scale(0.91);
+  }
+  78.2608695652% {
+    transform: translateX(25vw) translateY(6vh) scale(0.54);
+  }
+  82.6086956522% {
+    transform: translateX(-4vw) translateY(34vh) scale(0.98);
+  }
+  86.9565217391% {
+    transform: translateX(27vw) translateY(-8vh) scale(0.84);
+  }
+  91.3043478261% {
+    transform: translateX(47vw) translateY(41vh) scale(0.42);
+  }
+  95.652173913% {
+    transform: translateX(15vw) translateY(32vh) scale(0.71);
+  }
+  100% {
+    transform: translateX(45vw) translateY(3vh) scale(0.35);
+  }
+}
+
+@keyframes move13 {
+  0% {
+    transform: translateX(-40vw) translateY(10vh) scale(0.35);
+  }
+  4.347826087% {
+    transform: translateX(11vw) translateY(-7vh) scale(0.63);
+  }
+  8.6956521739% {
+    transform: translateX(40vw) translateY(38vh) scale(0.31);
+  }
+  13.0434782609% {
+    transform: translateX(22vw) translateY(-26vh) scale(0.87);
+  }
+  17.3913043478% {
+    transform: translateX(-25vw) translateY(-44vh) scale(0.61);
+  }
+  21.7391304348% {
+    transform: translateX(-6vw) translateY(-6vh) scale(0.31);
+  }
+  26.0869565217% {
+    transform: translateX(-9vw) translateY(-25vh) scale(0.48);
+  }
+  30.4347826087% {
+    transform: translateX(-18vw) translateY(40vh) scale(0.98);
+  }
+  34.7826086957% {
+    transform: translateX(40vw) translateY(42vh) scale(0.57);
+  }
+  39.1304347826% {
+    transform: translateX(28vw) translateY(-26vh) scale(0.73);
+  }
+  43.4782608696% {
+    transform: translateX(10vw) translateY(-22vh) scale(0.7);
+  }
+  47.8260869565% {
+    transform: translateX(-15vw) translateY(-18vh) scale(0.75);
+  }
+  52.1739130435% {
+    transform: translateX(-45vw) translateY(6vh) scale(0.4);
+  }
+  56.5217391304% {
+    transform: translateX(9vw) translateY(25vh) scale(0.52);
+  }
+  60.8695652174% {
+    transform: translateX(10vw) translateY(15vh) scale(0.36);
+  }
+  65.2173913043% {
+    transform: translateX(-46vw) translateY(22vh) scale(0.55);
+  }
+  69.5652173913% {
+    transform: translateX(16vw) translateY(-17vh) scale(0.66);
+  }
+  73.9130434783% {
+    transform: translateX(0vw) translateY(-14vh) scale(0.91);
+  }
+  78.2608695652% {
+    transform: translateX(25vw) translateY(6vh) scale(0.54);
+  }
+  82.6086956522% {
+    transform: translateX(-4vw) translateY(34vh) scale(0.98);
+  }
+  86.9565217391% {
+    transform: translateX(27vw) translateY(-8vh) scale(0.84);
+  }
+  91.3043478261% {
+    transform: translateX(47vw) translateY(41vh) scale(0.42);
+  }
+  95.652173913% {
+    transform: translateX(15vw) translateY(32vh) scale(0.71);
+  }
+  100% {
+    transform: translateX(45vw) translateY(3vh) scale(0.35);
+  }
+}
+.firefly:nth-child(14) {
+  -webkit-animation-name: move14;
+          animation-name: move14;
+}
+.firefly:nth-child(14)::before {
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
+}
+.firefly:nth-child(14)::after {
+  -webkit-animation-duration: 10s, 9278ms;
+          animation-duration: 10s, 9278ms;
+  -webkit-animation-delay: 0ms, 6240ms;
+          animation-delay: 0ms, 6240ms;
+}
+
+@-webkit-keyframes move14 {
+  0% {
+    transform: translateX(5vw) translateY(15vh) scale(0.57);
+  }
+  4.1666666667% {
+    transform: translateX(4vw) translateY(20vh) scale(0.48);
+  }
+  8.3333333333% {
+    transform: translateX(-40vw) translateY(-31vh) scale(0.87);
+  }
+  12.5% {
+    transform: translateX(-40vw) translateY(49vh) scale(0.46);
+  }
+  16.6666666667% {
+    transform: translateX(-35vw) translateY(8vh) scale(0.28);
+  }
+  20.8333333333% {
+    transform: translateX(-28vw) translateY(-38vh) scale(0.98);
+  }
+  25% {
+    transform: translateX(-6vw) translateY(11vh) scale(0.89);
+  }
+  29.1666666667% {
+    transform: translateX(10vw) translateY(15vh) scale(0.27);
+  }
+  33.3333333333% {
+    transform: translateX(-33vw) translateY(36vh) scale(0.83);
+  }
+  37.5% {
+    transform: translateX(-10vw) translateY(-31vh) scale(0.85);
+  }
+  41.6666666667% {
+    transform: translateX(-35vw) translateY(11vh) scale(0.59);
+  }
+  45.8333333333% {
+    transform: translateX(11vw) translateY(16vh) scale(0.41);
+  }
+  50% {
+    transform: translateX(-5vw) translateY(2vh) scale(0.63);
+  }
+  54.1666666667% {
+    transform: translateX(-8vw) translateY(44vh) scale(0.84);
+  }
+  58.3333333333% {
+    transform: translateX(3vw) translateY(7vh) scale(0.66);
+  }
+  62.5% {
+    transform: translateX(-29vw) translateY(-41vh) scale(0.98);
+  }
+  66.6666666667% {
+    transform: translateX(-12vw) translateY(-27vh) scale(0.63);
+  }
+  70.8333333333% {
+    transform: translateX(35vw) translateY(37vh) scale(0.74);
+  }
+  75% {
+    transform: translateX(-7vw) translateY(44vh) scale(0.65);
+  }
+  79.1666666667% {
+    transform: translateX(-28vw) translateY(-32vh) scale(0.82);
+  }
+  83.3333333333% {
+    transform: translateX(-37vw) translateY(-3vh) scale(0.69);
+  }
+  87.5% {
+    transform: translateX(47vw) translateY(16vh) scale(0.56);
+  }
+  91.6666666667% {
+    transform: translateX(22vw) translateY(-34vh) scale(0.5);
+  }
+  95.8333333333% {
+    transform: translateX(34vw) translateY(34vh) scale(0.42);
+  }
+  100% {
+    transform: translateX(-13vw) translateY(22vh) scale(0.93);
+  }
+}
+
+@keyframes move14 {
+  0% {
+    transform: translateX(5vw) translateY(15vh) scale(0.57);
+  }
+  4.1666666667% {
+    transform: translateX(4vw) translateY(20vh) scale(0.48);
+  }
+  8.3333333333% {
+    transform: translateX(-40vw) translateY(-31vh) scale(0.87);
+  }
+  12.5% {
+    transform: translateX(-40vw) translateY(49vh) scale(0.46);
+  }
+  16.6666666667% {
+    transform: translateX(-35vw) translateY(8vh) scale(0.28);
+  }
+  20.8333333333% {
+    transform: translateX(-28vw) translateY(-38vh) scale(0.98);
+  }
+  25% {
+    transform: translateX(-6vw) translateY(11vh) scale(0.89);
+  }
+  29.1666666667% {
+    transform: translateX(10vw) translateY(15vh) scale(0.27);
+  }
+  33.3333333333% {
+    transform: translateX(-33vw) translateY(36vh) scale(0.83);
+  }
+  37.5% {
+    transform: translateX(-10vw) translateY(-31vh) scale(0.85);
+  }
+  41.6666666667% {
+    transform: translateX(-35vw) translateY(11vh) scale(0.59);
+  }
+  45.8333333333% {
+    transform: translateX(11vw) translateY(16vh) scale(0.41);
+  }
+  50% {
+    transform: translateX(-5vw) translateY(2vh) scale(0.63);
+  }
+  54.1666666667% {
+    transform: translateX(-8vw) translateY(44vh) scale(0.84);
+  }
+  58.3333333333% {
+    transform: translateX(3vw) translateY(7vh) scale(0.66);
+  }
+  62.5% {
+    transform: translateX(-29vw) translateY(-41vh) scale(0.98);
+  }
+  66.6666666667% {
+    transform: translateX(-12vw) translateY(-27vh) scale(0.63);
+  }
+  70.8333333333% {
+    transform: translateX(35vw) translateY(37vh) scale(0.74);
+  }
+  75% {
+    transform: translateX(-7vw) translateY(44vh) scale(0.65);
+  }
+  79.1666666667% {
+    transform: translateX(-28vw) translateY(-32vh) scale(0.82);
+  }
+  83.3333333333% {
+    transform: translateX(-37vw) translateY(-3vh) scale(0.69);
+  }
+  87.5% {
+    transform: translateX(47vw) translateY(16vh) scale(0.56);
+  }
+  91.6666666667% {
+    transform: translateX(22vw) translateY(-34vh) scale(0.5);
+  }
+  95.8333333333% {
+    transform: translateX(34vw) translateY(34vh) scale(0.42);
+  }
+  100% {
+    transform: translateX(-13vw) translateY(22vh) scale(0.93);
+  }
+}
+.firefly:nth-child(15) {
+  -webkit-animation-name: move15;
+          animation-name: move15;
+}
+.firefly:nth-child(15)::before {
+  -webkit-animation-duration: 14s;
+          animation-duration: 14s;
+}
+.firefly:nth-child(15)::after {
+  -webkit-animation-duration: 14s, 7407ms;
+          animation-duration: 14s, 7407ms;
+  -webkit-animation-delay: 0ms, 1121ms;
+          animation-delay: 0ms, 1121ms;
+}
+
+@-webkit-keyframes move15 {
+  0% {
+    transform: translateX(-37vw) translateY(-31vh) scale(0.74);
+  }
+  4.347826087% {
+    transform: translateX(42vw) translateY(-10vh) scale(0.85);
+  }
+  8.6956521739% {
+    transform: translateX(-22vw) translateY(-22vh) scale(0.36);
+  }
+  13.0434782609% {
+    transform: translateX(47vw) translateY(-36vh) scale(0.77);
+  }
+  17.3913043478% {
+    transform: translateX(45vw) translateY(42vh) scale(0.41);
+  }
+  21.7391304348% {
+    transform: translateX(-34vw) translateY(-44vh) scale(0.95);
+  }
+  26.0869565217% {
+    transform: translateX(-27vw) translateY(14vh) scale(0.59);
+  }
+  30.4347826087% {
+    transform: translateX(27vw) translateY(-45vh) scale(0.42);
+  }
+  34.7826086957% {
+    transform: translateX(-13vw) translateY(28vh) scale(0.69);
+  }
+  39.1304347826% {
+    transform: translateX(-19vw) translateY(-38vh) scale(0.75);
+  }
+  43.4782608696% {
+    transform: translateX(3vw) translateY(-27vh) scale(0.81);
+  }
+  47.8260869565% {
+    transform: translateX(-13vw) translateY(-19vh) scale(0.45);
+  }
+  52.1739130435% {
+    transform: translateX(-15vw) translateY(18vh) scale(0.43);
+  }
+  56.5217391304% {
+    transform: translateX(27vw) translateY(-13vh) scale(0.28);
+  }
+  60.8695652174% {
+    transform: translateX(8vw) translateY(21vh) scale(0.53);
+  }
+  65.2173913043% {
+    transform: translateX(30vw) translateY(-49vh) scale(0.66);
+  }
+  69.5652173913% {
+    transform: translateX(35vw) translateY(-42vh) scale(0.45);
+  }
+  73.9130434783% {
+    transform: translateX(-44vw) translateY(2vh) scale(0.67);
+  }
+  78.2608695652% {
+    transform: translateX(-7vw) translateY(42vh) scale(0.6);
+  }
+  82.6086956522% {
+    transform: translateX(38vw) translateY(-37vh) scale(0.31);
+  }
+  86.9565217391% {
+    transform: translateX(5vw) translateY(0vh) scale(0.79);
+  }
+  91.3043478261% {
+    transform: translateX(-18vw) translateY(42vh) scale(0.53);
+  }
+  95.652173913% {
+    transform: translateX(-42vw) translateY(-5vh) scale(0.72);
+  }
+  100% {
+    transform: translateX(11vw) translateY(35vh) scale(0.49);
+  }
+}
+
+@keyframes move15 {
+  0% {
+    transform: translateX(-37vw) translateY(-31vh) scale(0.74);
+  }
+  4.347826087% {
+    transform: translateX(42vw) translateY(-10vh) scale(0.85);
+  }
+  8.6956521739% {
+    transform: translateX(-22vw) translateY(-22vh) scale(0.36);
+  }
+  13.0434782609% {
+    transform: translateX(47vw) translateY(-36vh) scale(0.77);
+  }
+  17.3913043478% {
+    transform: translateX(45vw) translateY(42vh) scale(0.41);
+  }
+  21.7391304348% {
+    transform: translateX(-34vw) translateY(-44vh) scale(0.95);
+  }
+  26.0869565217% {
+    transform: translateX(-27vw) translateY(14vh) scale(0.59);
+  }
+  30.4347826087% {
+    transform: translateX(27vw) translateY(-45vh) scale(0.42);
+  }
+  34.7826086957% {
+    transform: translateX(-13vw) translateY(28vh) scale(0.69);
+  }
+  39.1304347826% {
+    transform: translateX(-19vw) translateY(-38vh) scale(0.75);
+  }
+  43.4782608696% {
+    transform: translateX(3vw) translateY(-27vh) scale(0.81);
+  }
+  47.8260869565% {
+    transform: translateX(-13vw) translateY(-19vh) scale(0.45);
+  }
+  52.1739130435% {
+    transform: translateX(-15vw) translateY(18vh) scale(0.43);
+  }
+  56.5217391304% {
+    transform: translateX(27vw) translateY(-13vh) scale(0.28);
+  }
+  60.8695652174% {
+    transform: translateX(8vw) translateY(21vh) scale(0.53);
+  }
+  65.2173913043% {
+    transform: translateX(30vw) translateY(-49vh) scale(0.66);
+  }
+  69.5652173913% {
+    transform: translateX(35vw) translateY(-42vh) scale(0.45);
+  }
+  73.9130434783% {
+    transform: translateX(-44vw) translateY(2vh) scale(0.67);
+  }
+  78.2608695652% {
+    transform: translateX(-7vw) translateY(42vh) scale(0.6);
+  }
+  82.6086956522% {
+    transform: translateX(38vw) translateY(-37vh) scale(0.31);
+  }
+  86.9565217391% {
+    transform: translateX(5vw) translateY(0vh) scale(0.79);
+  }
+  91.3043478261% {
+    transform: translateX(-18vw) translateY(42vh) scale(0.53);
+  }
+  95.652173913% {
+    transform: translateX(-42vw) translateY(-5vh) scale(0.72);
+  }
+  100% {
+    transform: translateX(11vw) translateY(35vh) scale(0.49);
+  }
+}
+@-webkit-keyframes drift {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes drift {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes flash {
+  0%, 30%, 100% {
+    opacity: 0;
+    box-shadow: 0 0 0vw 0vw yellow;
+  }
+  5% {
+    opacity: 1;
+    box-shadow: 0 0 2vw 0.4vw yellow;
+  }
+}
+@keyframes flash {
+  0%, 30%, 100% {
+    opacity: 0;
+    box-shadow: 0 0 0vw 0vw yellow;
+  }
+  5% {
+    opacity: 1;
+    box-shadow: 0 0 2vw 0.4vw yellow;
+  }
+}/*# sourceMappingURL=style.css.map */
